@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model SiteConfig {
+  id           String   @id @default("main")
+  ownerName    String
+  title        String   @default("Software Developer")
+  bio          String?
+  avatarUrl    String?
+  githubUrl    String?
+  linkedinUrl  String?
+  instagramUrl String?
+  emailContact String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Passion {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String
+  emoji       String
+  color       String
+  modelUrl    String?
+  positionX   Float     @default(0)
+  positionY   Float     @default(0)
+  positionZ   Float     @default(0)
+  sortOrder   Int       @default(0)
+  isVisible   Boolean   @default(true)
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  longDesc    String?
+  coverImage  String?
+  images      String[]
+  externalUrl String?
+  tags        String[]
+  isFeatured  Boolean  @default(false)
+  isVisible   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  passionId   String
+  passion     Passion  @relation(fields: [passionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
