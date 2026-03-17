@@ -174,6 +174,9 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
 
   const projects = activePassion ? (MOCK_PROJECTS[activePassion.name] ?? []) : []
 
+  // Colore accent che cambia con la passione attiva
+  const accentColor = activePassion?.color ?? '#7C5CFC'
+
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden', background: '#0D0D0D' }}>
 
@@ -305,15 +308,58 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
       </AnimatePresence>
 
       {/* Colonna destra — scena 3D (si allarga quando c'è passione attiva) */}
-      <div style={{ flex: 1, height: '100%', position: 'relative' }}>
-        <Scene3D
-          avatarUrl={avatarUrl}
-          passions={passions}
-          onPassionSelect={() => {}}
-          onZoomComplete={setActivePassion}
-          onAvatarClick={() => setAboutOpen(true)}
-          resetSignal={resetSignal}
-        />
+      <div style={{ flex: 1, height: '100%', position: 'relative', overflow: 'hidden' }}>
+        {/* Sfondo nebula dinamico */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          background: '#0D0D0D',
+          transition: 'all 1.2s cubic-bezier(0.16,1,0.3,1)',
+        }}>
+          {/* Blob centrale — cambia con la passione */}
+          <div style={{
+            position: 'absolute',
+            top: '50%', left: '50%',
+            width: '70%', height: '70%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            background: `radial-gradient(ellipse at center, ${accentColor}3A 0%, transparent 70%)`,
+            transition: 'background 1.2s cubic-bezier(0.16,1,0.3,1)',
+          }} />
+          {/* Blob viola top-right fisso */}
+          <div style={{
+            position: 'absolute',
+            top: '-10%', right: '-5%',
+            width: '55%', height: '55%',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, #7C5CFC30 0%, transparent 65%)',
+          }} />
+          {/* Blob teal bottom-left fisso */}
+          <div style={{
+            position: 'absolute',
+            bottom: '-15%', left: '-10%',
+            width: '60%', height: '60%',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, #1B433230 0%, transparent 65%)',
+          }} />
+          {/* Blob ambra top-left fisso */}
+          <div style={{
+            position: 'absolute',
+            top: '10%', left: '-5%',
+            width: '35%', height: '35%',
+            borderRadius: '50%',
+            background: 'radial-gradient(ellipse at center, #E8A87C22 0%, transparent 65%)',
+          }} />
+        </div>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+          <Scene3D
+            avatarUrl={avatarUrl}
+            passions={passions}
+            onPassionSelect={() => {}}
+            onZoomComplete={setActivePassion}
+            onAvatarClick={() => setAboutOpen(true)}
+            resetSignal={resetSignal}
+          />
+        </div>
       </div>
     </div>
   )
