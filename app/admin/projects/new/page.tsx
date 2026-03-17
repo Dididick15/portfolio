@@ -13,6 +13,7 @@ async function action(_: unknown, formData: FormData) {
       passionId: formData.get("passionId") as string,
       longDesc: (formData.get("longDesc") as string) || undefined,
       coverImage: (formData.get("coverImage") as string) || undefined,
+      images: formData.getAll("images").filter(Boolean) as string[],
       externalUrl: (formData.get("externalUrl") as string) || undefined,
       tags: ((formData.get("tags") as string) || "").split(",").map(t => t.trim()).filter(Boolean),
       isFeatured: formData.get("isFeatured") === "on",

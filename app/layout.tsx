@@ -1,10 +1,22 @@
 import type { Metadata } from "next"
-import { Outfit } from "next/font/google"
+import { Outfit, Syne, Space_Mono } from "next/font/google"
 import "./globals.css"
 
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
+})
+
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+})
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 })
 
 export const metadata: Metadata = {
@@ -19,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it">
-      <body className={`${outfit.variable} font-(family-name:--font-outfit) antialiased`}>
+      <body className={`${outfit.variable} ${syne.variable} ${spaceMono.variable} font-(family-name:--font-outfit) antialiased`}>
         {children}
       </body>
     </html>

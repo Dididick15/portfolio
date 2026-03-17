@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Pencil, Trash2 } from "lucide-react"
 
 type Passion = {
-  id: string; name: string; emoji: string; color: string
+  id: string; name: string; emoji: string | null; color: string
   isVisible: boolean; _count: { projects: number }
 }
 
@@ -22,7 +22,7 @@ export function PassionsList({ passions }: { passions: Passion[] }) {
           className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
         >
           <div className="flex items-center gap-4">
-            <span className="text-2xl">{p.emoji}</span>
+            {p.emoji && <span className="text-2xl">{p.emoji}</span>}
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-medium">{p.name}</span>

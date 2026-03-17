@@ -13,8 +13,12 @@ model SiteConfig {
   ownerName    String
   title        String   @default("Software Developer")
   bio          String?
-  avatarUrl    String?
-  githubUrl    String?
+  avatarUrl         String?
+  bioLong           String?
+  location          String?
+  availableForWork  Boolean  @default(false)
+  cvUrl             String?
+  githubUrl         String?
   linkedinUrl  String?
   instagramUrl String?
   emailContact String?
@@ -26,14 +30,15 @@ model Passion {
   name        String
   slug        String    @unique
   description String
-  emoji       String
+  emoji       String?
   color       String
   modelUrl    String?
   positionX   Float     @default(0)
   positionY   Float     @default(0)
   positionZ   Float     @default(0)
-  sortOrder   Int       @default(0)
-  isVisible   Boolean   @default(true)
+  sortOrder      Int       @default(0)
+  isVisible      Boolean   @default(true)
+  useModelColor  Boolean   @default(false)
   projects    Project[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

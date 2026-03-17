@@ -21,7 +21,7 @@ export async function getProjectById(id: string) {
 export async function createProject(data: {
   title: string; slug: string; description: string
   passionId: string; longDesc?: string; coverImage?: string
-  externalUrl?: string; tags: string[]; isFeatured?: boolean
+  images?: string[]; externalUrl?: string; tags: string[]; isFeatured?: boolean
 }) {
   const count = await prisma.project.count({ where: { passionId: data.passionId } })
   await prisma.project.create({ data: { ...data, sortOrder: count } })
@@ -31,7 +31,7 @@ export async function createProject(data: {
 
 export async function updateProject(id: string, data: {
   title?: string; description?: string; longDesc?: string
-  coverImage?: string | null; externalUrl?: string | null
+  coverImage?: string | null; images?: string[]; externalUrl?: string | null
   tags?: string[]; isFeatured?: boolean; isVisible?: boolean
   passionId?: string
 }) {

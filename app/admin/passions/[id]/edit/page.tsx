@@ -20,6 +20,7 @@ export default async function EditPassionPage({ params }: { params: Promise<{ id
         positionY: parseFloat(formData.get("positionY") as string) || 0,
         positionZ: parseFloat(formData.get("positionZ") as string) || 0,
         isVisible: formData.get("isVisible") === "on",
+        useModelColor: formData.get("useModelColor") === "on",
       })
     } catch (e) {
       return { error: (e as Error).message }
@@ -30,7 +31,7 @@ export default async function EditPassionPage({ params }: { params: Promise<{ id
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Modifica — {passion.name}</h1>
-      <PassionForm action={action} defaultValues={{ ...passion, modelUrl: passion.modelUrl ?? undefined }} />
+      <PassionForm action={action} defaultValues={{ ...passion, emoji: passion.emoji ?? undefined, modelUrl: passion.modelUrl ?? undefined }} />
     </div>
   )
 }

@@ -4,12 +4,18 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
 export async function getSiteConfig() {
-  return prisma.siteConfig.findUnique({ where: { id: "main" } })
+  try {
+    return await prisma.siteConfig.findUnique({ where: { id: "main" } })
+  } catch {
+    return null
+  }
 }
 
 export async function upsertSiteConfig(data: {
   ownerName: string; title?: string; bio?: string | null
-  avatarUrl?: string | null; githubUrl?: string | null
+  avatarUrl?: string | null; bioLong?: string | null
+  location?: string | null; availableForWork?: boolean
+  cvUrl?: string | null; githubUrl?: string | null
   linkedinUrl?: string | null; instagramUrl?: string | null
   emailContact?: string | null
 }) {

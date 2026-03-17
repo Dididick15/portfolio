@@ -17,6 +17,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
         passionId: formData.get("passionId") as string,
         longDesc: (formData.get("longDesc") as string) || undefined,
         coverImage: (formData.get("coverImage") as string) || null,
+        images: formData.getAll("images").filter(Boolean) as string[],
         externalUrl: (formData.get("externalUrl") as string) || null,
         tags: ((formData.get("tags") as string) || "").split(",").map(t => t.trim()).filter(Boolean),
         isFeatured: formData.get("isFeatured") === "on",
