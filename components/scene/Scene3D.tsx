@@ -140,9 +140,10 @@ interface Scene3DProps {
   resetSignal: number
   mobilePositions?: [number, number, number][]
   allowPanY?: boolean
+  fov?: number
 }
 
-export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal, mobilePositions, allowPanY }: Scene3DProps) {
+export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal, mobilePositions, allowPanY, fov = 50 }: Scene3DProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const [avatarSelected, setAvatarSelected] = useState(false)
   const [zooming, setZooming] = useState(false)
@@ -204,7 +205,7 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 3]} intensity={1.0} color="#ffffff" />
       <pointLight position={[-3, 2, 2]} intensity={0.4} color="#E8D5B0" />
-      <PerspectiveCamera makeDefault position={[0, 0, 5.5]} fov={50} />
+      <PerspectiveCamera makeDefault position={[0, 0, 5.5]} fov={fov} />
       <CinematicCamera
         target={zoomTarget}
         onZoomComplete={handleZoomComplete}

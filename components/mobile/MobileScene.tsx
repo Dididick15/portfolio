@@ -26,9 +26,10 @@ interface MobileSceneProps {
   accentColor?: string
   resetSignal: number
   onPassionZoomed: (p: PassionData) => void
+  onAvatarClick?: () => void
 }
 
-export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onPassionZoomed }: MobileSceneProps) {
+export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onPassionZoomed, onAvatarClick }: MobileSceneProps) {
   const [loading, setLoading] = useState(true)
   const [showTapHint, setShowTapHint] = useState(false)
   const [showScrollHint, setShowScrollHint] = useState(false)
@@ -63,6 +64,12 @@ export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onP
     onPassionZoomed(p)
   }, [onPassionZoomed])
 
+  const handleAvatarZoom = useCallback(() => {
+    setShowTapHint(false)
+    setShowScrollHint(true)
+    onAvatarClick?.()
+  }, [onAvatarClick])
+
   const color = accentColor ?? '#5A9B7A'
 
   return (
@@ -96,8 +103,10 @@ export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onP
           passions={passions}
           onPassionSelect={() => {}}
           onZoomComplete={handleZoomComplete}
+          onAvatarClick={handleAvatarZoom}
           resetSignal={resetSignal}
           allowPanY
+          fov={75}
           mobilePositions={passions.map((p, i) => {
             if (p.positionMX !== 0 || p.positionMY !== 0 || p.positionMZ !== 0)
               return [p.positionMX, p.positionMY, p.positionMZ] as [number, number, number]

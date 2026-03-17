@@ -33,11 +33,14 @@ export function MobileHero({ ownerName, title }: MobileHeroProps) {
 
       <h1 style={{
         fontFamily: 'var(--font-syne), sans-serif',
-        fontSize: 'clamp(48px, 13vw, 80px)',
+        fontSize: 'clamp(36px, 10vw, 60px)',
         fontWeight: 800,
         color: '#F0EDE8',
         lineHeight: 1.05,
         margin: '0 0 12px',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
+        width: '100%',
       }}>
         {ownerName ?? 'Portfolio'}
       </h1>

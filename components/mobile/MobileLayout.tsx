@@ -5,11 +5,21 @@ import { AnimatePresence } from 'framer-motion'
 import { MobileHero } from './MobileHero'
 import { MobileScene } from './MobileScene'
 import { MobileProjects } from './MobileProjects'
+import { MobileAbout } from './MobileAbout'
 import type { PassionData, ProjectData } from '@/app/HomeClient'
 
 interface SiteConfig {
   ownerName?: string | null
   title?: string | null
+  bio?: string | null
+  bioLong?: string | null
+  location?: string | null
+  availableForWork?: boolean
+  cvUrl?: string | null
+  githubUrl?: string | null
+  linkedinUrl?: string | null
+  instagramUrl?: string | null
+  emailContact?: string | null
 }
 
 interface MobileLayoutProps {
@@ -19,21 +29,27 @@ interface MobileLayoutProps {
   siteConfig?: SiteConfig | null
 }
 
+type ActiveSection = { type: 'passion'; passion: PassionData } | { type: 'about' } | null
+
 export function MobileLayout({ avatarUrl, passions, projects, siteConfig }: MobileLayoutProps) {
-  const [activePassion, setActivePassion] = useState<PassionData | null>(null)
+  const [active, setActive] = useState<ActiveSection>(null)
   const [resetSignal, setResetSignal] = useState(0)
 
   const handlePassionZoomed = useCallback((p: PassionData) => {
-    setActivePassion(p)
+    setActive({ type: 'passion', passion: p })
+  }, [])
+
+  const handleAvatarClick = useCallback(() => {
+    setActive({ type: 'about' })
   }, [])
 
   const handleBack = useCallback(() => {
-    setActivePassion(null)
+    setActive(null)
     setResetSignal(s => s + 1)
   }, [])
 
-  const passionProjects = activePassion
-    ? projects.filter(p => p.passionId === activePassion.id)
+  const passionProjects = active?.type === 'passion'
+    ? projects.filter(p => p.passionId === active.passion.id)
     : []
 
   return (
@@ -51,17 +67,25 @@ export function MobileLayout({ avatarUrl, passions, projects, siteConfig }: Mobi
       <MobileScene
         passions={passions}
         avatarUrl={avatarUrl}
-        accentColor={activePassion?.color}
+        accentColor={active?.type === 'passion' ? active.passion.color : undefined}
         resetSignal={resetSignal}
         onPassionZoomed={handlePassionZoomed}
+        onAvatarClick={handleAvatarClick}
       />
 
       <AnimatePresence mode="wait">
-        {activePassion && (
+        {active?.type === 'passion' && (
           <MobileProjects
-            key={activePassion.id}
-            passion={activePassion}
+            key={active.passion.id}
+            passion={active.passion}
             projects={passionProjects}
+            onBack={handleBack}
+          />
+        )}
+        {active?.type === 'about' && (
+          <MobileAbout
+            key="about"
+            config={siteConfig ?? {}}
             onBack={handleBack}
           />
         )}
