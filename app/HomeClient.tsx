@@ -65,6 +65,7 @@ interface HomeClientProps {
 
 function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientProps) {
   const [loading, setLoading] = useState(false)
+  const [sceneProgress, setSceneProgress] = useState(0)
   useEffect(() => setLoading(true), [])
   const [activePassion, setActivePassion] = useState<PassionData | null>(null)
   const [activeProject, setActiveProject] = useState<ProjectData | null>(null)
@@ -217,7 +218,7 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
 
       {/* Colonna destra — scena 3D */}
       <div style={{ flex: 1, height: '100%', position: 'relative', overflow: 'hidden' }}>
-        {loading && <Loader onComplete={() => setLoading(false)} contained />}
+        {loading && <Loader onComplete={() => setLoading(false)} contained externalProgress={sceneProgress} />}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0,
           background: '#0D0D0D',
@@ -262,6 +263,7 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
             onZoomComplete={handleZoomComplete}
             onAvatarClick={() => setAboutOpen(true)}
             resetSignal={resetSignal}
+            onProgress={setSceneProgress}
           />
         </div>
         <ProjectDetailSidebar

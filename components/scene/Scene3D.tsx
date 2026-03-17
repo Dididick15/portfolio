@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { PerspectiveCamera } from '@react-three/drei'
+import { PerspectiveCamera, useProgress } from '@react-three/drei'
 import { Group, Vector3 } from 'three'
 import { AvatarPlaceholder } from './AvatarPlaceholder'
 import { PassionNode } from './PassionNode'
@@ -131,6 +131,12 @@ function SceneContent({ passions, positions, selected, avatarSelected, zooming, 
   )
 }
 
+function ProgressBridge({ onProgress }: { onProgress: (p: number) => void }) {
+  const { progress } = useProgress()
+  useEffect(() => { onProgress(progress) }, [progress, onProgress])
+  return null
+}
+
 interface Scene3DProps {
   avatarUrl?: string | null
   passions: PassionData[]
@@ -141,9 +147,10 @@ interface Scene3DProps {
   mobilePositions?: [number, number, number][]
   allowPanY?: boolean
   fov?: number
+  onProgress?: (p: number) => void
 }
 
-export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal, mobilePositions, allowPanY, fov = 50 }: Scene3DProps) {
+export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal, mobilePositions, allowPanY, fov = 50, onProgress }: Scene3DProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const [avatarSelected, setAvatarSelected] = useState(false)
   const [zooming, setZooming] = useState(false)
@@ -205,6 +212,7 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 3]} intensity={1.0} color="#ffffff" />
       <pointLight position={[-3, 2, 2]} intensity={0.4} color="#E8D5B0" />
+      {onProgress && <ProgressBridge onProgress={onProgress} />}
       <PerspectiveCamera makeDefault position={[0, 0, 5.5]} fov={fov} />
       <CinematicCamera
         target={zoomTarget}

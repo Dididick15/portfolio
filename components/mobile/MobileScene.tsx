@@ -31,6 +31,7 @@ interface MobileSceneProps {
 
 export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onPassionZoomed, onAvatarClick }: MobileSceneProps) {
   const [loading, setLoading] = useState(true)
+  const [sceneProgress, setSceneProgress] = useState(0)
   const [showTapHint, setShowTapHint] = useState(false)
   const [showScrollHint, setShowScrollHint] = useState(false)
   const canvasWrapperRef = useRef<HTMLDivElement>(null)
@@ -105,6 +106,7 @@ export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onP
           onZoomComplete={handleZoomComplete}
           onAvatarClick={handleAvatarZoom}
           resetSignal={resetSignal}
+          onProgress={setSceneProgress}
           allowPanY
           fov={75}
           mobilePositions={passions.map((p, i) => {
@@ -117,7 +119,7 @@ export function MobileScene({ passions, avatarUrl, accentColor, resetSignal, onP
 
       {/* Loader */}
       {loading && (
-        <Loader contained onComplete={handleLoadComplete} duration={2800} />
+        <Loader contained onComplete={handleLoadComplete} externalProgress={sceneProgress} />
       )}
 
       {/* Tap hint */}

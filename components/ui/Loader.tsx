@@ -7,27 +7,40 @@ interface LoaderProps {
   onComplete?: () => void
   duration?: number
   contained?: boolean
+  externalProgress?: number  // 0-100, se fornito guida la barra reale
 }
 
-export function Loader({ onComplete, duration = 2800, contained = false }: LoaderProps) {
+export function Loader({ onComplete, duration = 2800, contained = false, externalProgress }: LoaderProps) {
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsComplete(true)
-          setTimeout(() => onComplete?.(), 500)
-          return 100
-        }
-        return prev + 1
-      })
-    }, duration / 100)
+    if (externalProgress === undefined) {
+      // Modalità timer simulato (comportamento originale)
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            setIsComplete(true)
+            setTimeout(() => onComplete?.(), 500)
+            return 100
+          }
+          return prev + 1
+        })
+      }, duration / 100)
+      return () => clearInterval(interval)
+    }
+  }, [duration, onComplete, externalProgress])
 
-    return () => clearInterval(interval)
-  }, [duration, onComplete])
+  // Quando externalProgress è fornito, segui quello
+  useEffect(() => {
+    if (externalProgress === undefined) return
+    setProgress(externalProgress)
+    if (externalProgress >= 100 && !isComplete) {
+      setIsComplete(true)
+      setTimeout(() => onComplete?.(), 500)
+    }
+  }, [externalProgress, isComplete, onComplete])
 
   return (
     <div style={{

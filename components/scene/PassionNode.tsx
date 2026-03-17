@@ -20,10 +20,10 @@ interface PassionNodeProps {
 }
 
 const GEOMETRIES = [
-  <icosahedronGeometry args={[0.32, 0]} />,
-  <octahedronGeometry args={[0.35, 0]} />,
-  <dodecahedronGeometry args={[0.28, 0]} />,
-  <tetrahedronGeometry args={[0.38, 0]} />,
+  <icosahedronGeometry args={[0.48, 0]} />,
+  <octahedronGeometry args={[0.52, 0]} />,
+  <dodecahedronGeometry args={[0.42, 0]} />,
+  <tetrahedronGeometry args={[0.56, 0]} />,
 ]
 
 // Floating puro: solo oscillazione sinusoidale lenta, nessuna fisica
@@ -49,7 +49,7 @@ function PassionGLB({ url, color, useModelColor }: { url: string; color: string;
     })
   }, [scene, color, useModelColor])
 
-  return <primitive object={scene} dispose={null} scale={0.4} />
+  return <primitive object={scene} dispose={null} scale={0.6} />
 }
 
 class GLBErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
