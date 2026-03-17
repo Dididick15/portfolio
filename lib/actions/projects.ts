@@ -3,9 +3,12 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
-export async function getProjects(passionId?: string) {
+export async function getProjects(passionId?: string, visibleOnly = false) {
   return prisma.project.findMany({
-    where: passionId ? { passionId } : undefined,
+    where: {
+      ...(passionId ? { passionId } : {}),
+      ...(visibleOnly ? { isVisible: true } : {}),
+    },
     orderBy: { sortOrder: "asc" },
     include: { passion: { select: { name: true, color: true } } },
   })

@@ -135,7 +135,7 @@ interface Scene3DProps {
   avatarUrl?: string | null
   passions: PassionData[]
   onPassionSelect: (passion: PassionData | null) => void
-  onZoomComplete: (passion: { name: string; emoji?: string; color: string }) => void
+  onZoomComplete: (passion: PassionData) => void
   onAvatarClick?: () => void
   resetSignal: number
 }
@@ -178,7 +178,7 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
       onAvatarClick?.()
     } else if (pendingPassion.current) {
       const p = pendingPassion.current
-      onZoomComplete({ name: p.name, emoji: p.emoji ?? undefined, color: p.color })
+      onZoomComplete(p)
     }
   }
 

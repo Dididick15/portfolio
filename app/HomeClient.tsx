@@ -1,10 +1,12 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ProjectsSidebar } from '@/components/ui/ProjectsSidebar'
 import { AboutSidebar } from '@/components/ui/AboutSidebar'
+import { ProjectDetailSidebar } from '@/components/ui/ProjectDetailSidebar'
+import { Loader } from '@/components/ui/Loader'
 
 const Scene3D = dynamic(
   () => import('@/components/scene/Scene3D').then(m => m.Scene3D),
@@ -23,20 +25,16 @@ export interface PassionData {
   positionZ: number
 }
 
-export interface ProjectMock {
+export interface ProjectData {
   id: string
+  passionId: string
   title: string
   description: string
+  longDesc?: string | null
   coverImage?: string | null
+  images: string[]
   tags: string[]
   externalUrl?: string | null
-  year: number
-}
-
-interface ActivePassion {
-  name: string
-  emoji?: string
-  color: string
 }
 
 interface SiteConfig {
@@ -57,112 +55,14 @@ interface HomeClientProps {
   avatarUrl?: string | null
   passions: PassionData[]
   siteConfig?: SiteConfig | null
+  projects: ProjectData[]
 }
 
-// Dati mock — fotografia
-const MOCK_PROJECTS: Record<string, ProjectMock[]> = {
-  'Fotografia': [
-    {
-      id: '1',
-      title: 'Golden Hour Milano',
-      description: 'Serie di scatti al tramonto per le strade di Milano: Navigli, Brera, Duomo. Luce calda, ombre lunghe, contrasti forti.',
-      coverImage: null,
-      tags: ['Street', 'Golden Hour', 'Milano'],
-      externalUrl: null,
-      year: 2024,
-    },
-    {
-      id: '2',
-      title: 'Portrait Series Vol.1',
-      description: 'Ritratti in studio con luce naturale diffusa. Focus sull\'espressione e la texture della pelle. 12 soggetti diversi.',
-      coverImage: null,
-      tags: ['Portrait', 'Studio', 'B&W'],
-      externalUrl: null,
-      year: 2024,
-    },
-    {
-      id: '3',
-      title: 'Urban Geometry',
-      description: 'Architettura urbana come soggetto astratto: linee, simmetrie, prospettive insolite nelle città italiane.',
-      coverImage: null,
-      tags: ['Architecture', 'Abstract', 'Urban'],
-      externalUrl: null,
-      year: 2023,
-    },
-    {
-      id: '4',
-      title: 'Persone in Movimento',
-      description: 'Long exposure in luoghi affollati — stazioni, mercati, piazze. Il flusso umano come pennellata di luce.',
-      coverImage: null,
-      tags: ['Long Exposure', 'Motion', 'Street'],
-      externalUrl: null,
-      year: 2023,
-    },
-  ],
-  'Videogiochi': [
-    {
-      id: '5',
-      title: 'Indie Game Jam 2024',
-      description: 'Gioco 2D platformer realizzato in 48h durante una jam. Engine: Godot 4, grafica pixel art.',
-      coverImage: null,
-      tags: ['Godot', 'Pixel Art', 'Jam'],
-      externalUrl: null,
-      year: 2024,
-    },
-    {
-      id: '6',
-      title: 'Shader Collection',
-      description: 'Raccolta di shader GLSL ispirati ai videogiochi retro. Scanlines, CRT glow, dithering, palette swap.',
-      coverImage: null,
-      tags: ['GLSL', 'Shader', 'Retro'],
-      externalUrl: null,
-      year: 2023,
-    },
-  ],
-  'Grafica': [
-    {
-      id: '7',
-      title: 'Brand Identity — DoubledLab',
-      description: 'Logo, palette, tipografia e motion identity per il progetto DoubledLab. Ispirato alla dualità e alla simmetria.',
-      coverImage: null,
-      tags: ['Branding', 'Logo', 'Motion'],
-      externalUrl: null,
-      year: 2024,
-    },
-    {
-      id: '8',
-      title: 'Poster Series — Syntwave',
-      description: 'Serie di 6 poster in stile synthwave per artisti indipendenti. Neon, griglia, sunsets.',
-      coverImage: null,
-      tags: ['Poster', 'Synthwave', 'Illustrator'],
-      externalUrl: null,
-      year: 2023,
-    },
-  ],
-  'Cucina': [
-    {
-      id: '9',
-      title: 'Pasta da Zero',
-      description: 'Documentazione fotografica e ricette del processo di fare pasta fresca artigianale: tagliatelle, ravioli, pici.',
-      coverImage: null,
-      tags: ['Pasta', 'Artigianale', 'Ricette'],
-      externalUrl: null,
-      year: 2024,
-    },
-    {
-      id: '10',
-      title: 'Fermentazione Creativa',
-      description: 'Esperimenti con lievito madre, kimchi, kombucha e formaggi stagionati fatti in casa.',
-      coverImage: null,
-      tags: ['Fermentazione', 'DIY', 'Esperimenti'],
-      externalUrl: null,
-      year: 2024,
-    },
-  ],
-}
-
-export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClientProps) {
-  const [activePassion, setActivePassion] = useState<ActivePassion | null>(null)
+export default function HomeClient({ avatarUrl, passions, siteConfig, projects }: HomeClientProps) {
+  const [loading, setLoading] = useState(false)
+  useEffect(() => setLoading(true), [])
+  const [activePassion, setActivePassion] = useState<PassionData | null>(null)
+  const [activeProject, setActiveProject] = useState<ProjectData | null>(null)
   const [aboutOpen, setAboutOpen] = useState(false)
   const [resetSignal, setResetSignal] = useState(0)
 
@@ -172,14 +72,18 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
     setResetSignal(s => s + 1)
   }
 
-  const projects = activePassion ? (MOCK_PROJECTS[activePassion.name] ?? []) : []
+  const activeProjects = useMemo(
+    () => activePassion ? projects.filter(p => p.passionId === activePassion.id) : [],
+    [activePassion, projects]
+  )
+
+  const handleZoomComplete = (passion: PassionData) => setActivePassion(passion)
 
   // Colore accent che cambia con la passione attiva
   const accentColor = activePassion?.color ?? '#7C5CFC'
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden', background: '#0D0D0D' }}>
-
       {/* Colonna sinistra — intro / about / progetti */}
       <AnimatePresence mode="wait">
         {!activePassion && !aboutOpen ? (
@@ -241,9 +145,9 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
                   fontSize: '10px',
                   padding: '4px 10px',
                   borderRadius: '3px',
-                  border: '1px solid #2A2A2A',
-                  background: '#1A1A1A',
-                  color: '#555',
+                  border: '1px solid rgba(255,255,255,0.35)',
+                  background: 'transparent',
+                  color: '#F0EDE8',
                   letterSpacing: '0.08em',
                 }}>
                   {tag}
@@ -300,8 +204,9 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
           >
             <ProjectsSidebar
               passion={activePassion}
-              projects={projects}
+              projects={activeProjects}
               onClose={handleClose}
+              onProjectClick={setActiveProject}
             />
           </motion.div>
         ) : null}
@@ -309,6 +214,7 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
 
       {/* Colonna destra — scena 3D (si allarga quando c'è passione attiva) */}
       <div style={{ flex: 1, height: '100%', position: 'relative', overflow: 'hidden' }}>
+        {loading && <Loader onComplete={() => setLoading(false)} contained />}
         {/* Sfondo nebula dinamico */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0,
@@ -355,11 +261,16 @@ export default function HomeClient({ avatarUrl, passions, siteConfig }: HomeClie
             avatarUrl={avatarUrl}
             passions={passions}
             onPassionSelect={() => {}}
-            onZoomComplete={setActivePassion}
+            onZoomComplete={handleZoomComplete}
             onAvatarClick={() => setAboutOpen(true)}
             resetSignal={resetSignal}
           />
         </div>
+        <ProjectDetailSidebar
+          project={activeProject}
+          color={activePassion?.color ?? '#7C5CFC'}
+          onClose={() => setActiveProject(null)}
+        />
       </div>
     </div>
   )
