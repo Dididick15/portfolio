@@ -40,7 +40,7 @@ export function MobileProjects({ passion, projects, onBack }: MobileProjectsProp
           fontWeight: 700,
           color: passion.color,
         }}>
-          {passion.emoji} {passion.name}
+          {passion.name}
         </span>
         <button
           onClick={onBack}
@@ -61,32 +61,26 @@ export function MobileProjects({ passion, projects, onBack }: MobileProjectsProp
       </div>
 
       {/* Projects list */}
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
         {projects.map((project, i) => (
           <motion.div
             key={project.id}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.3 }}
+            transition={{ delay: i * 0.07, duration: 0.35 }}
             onClick={() => router.push(`/projects/${project.id}`)}
             style={{
-              display: 'flex',
-              gap: 14,
               background: '#0E0E0E',
               border: '1px solid #1E1E1E',
-              borderRadius: 10,
+              borderRadius: 12,
               overflow: 'hidden',
               cursor: 'pointer',
-              padding: 12,
-              alignItems: 'center',
             }}
           >
             {/* Cover image */}
             <div style={{
-              width: 80, height: 80,
-              borderRadius: 8,
-              overflow: 'hidden',
-              flexShrink: 0,
+              width: '100%',
+              height: 180,
               background: '#1A1A1A',
               position: 'relative',
             }}>
@@ -97,28 +91,46 @@ export function MobileProjects({ passion, projects, onBack }: MobileProjectsProp
               )}
             </div>
 
-            {/* Text */}
-            <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Content */}
+            <div style={{ padding: '14px 16px 16px' }}>
               <p style={{
                 fontFamily: 'var(--font-syne), sans-serif',
-                fontSize: 15,
+                fontSize: 17,
                 fontWeight: 700,
                 color: '#F0EDE8',
-                marginBottom: 4,
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                marginBottom: 6,
               }}>{project.title}</p>
+
               <p style={{
                 fontFamily: 'var(--font-outfit), sans-serif',
-                fontSize: 12,
-                color: '#666',
-                lineHeight: 1.4,
+                fontSize: 13,
+                color: '#888',
+                lineHeight: 1.5,
                 display: '-webkit-box',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
+                marginBottom: project.tags.length > 0 ? 10 : 0,
               }}>{project.description}</p>
+
+              {/* Tags */}
+              {project.tags.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {project.tags.slice(0, 5).map(tag => (
+                    <span key={tag} style={{
+                      fontFamily: 'var(--font-space-mono), monospace',
+                      fontSize: 10,
+                      color: passion.color,
+                      border: `1px solid ${passion.color}44`,
+                      borderRadius: 4,
+                      padding: '2px 7px',
+                      letterSpacing: '0.05em',
+                    }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
         ))}
