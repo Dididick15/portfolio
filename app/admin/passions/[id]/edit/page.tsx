@@ -19,6 +19,9 @@ export default async function EditPassionPage({ params }: { params: Promise<{ id
         positionX: parseFloat(formData.get("positionX") as string) || 0,
         positionY: parseFloat(formData.get("positionY") as string) || 0,
         positionZ: parseFloat(formData.get("positionZ") as string) || 0,
+        positionMX: parseFloat(formData.get("positionMX") as string) || 0,
+        positionMY: parseFloat(formData.get("positionMY") as string) || 0,
+        positionMZ: parseFloat(formData.get("positionMZ") as string) || 0,
         isVisible: formData.get("isVisible") === "on",
         useModelColor: formData.get("useModelColor") === "on",
       })

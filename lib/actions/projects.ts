@@ -17,7 +17,7 @@ export async function getProjects(passionId?: string, visibleOnly = false) {
 export async function getProjectById(id: string) {
   return prisma.project.findUnique({
     where: { id },
-    include: { passion: { select: { id: true, name: true } } },
+    include: { passion: { select: { id: true, name: true, color: true } } },
   })
 }
 

@@ -15,6 +15,7 @@ type Props = {
     name?: string; slug?: string; description?: string
     emoji?: string; color?: string; modelUrl?: string
     positionX?: number; positionY?: number; positionZ?: number
+    positionMX?: number; positionMY?: number; positionMZ?: number
     isVisible?: boolean; useModelColor?: boolean
   }
 }
@@ -56,13 +57,28 @@ export function PassionForm({ action, defaultValues: d = {} }: Props) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        {(["positionX", "positionY", "positionZ"] as const).map((axis) => (
-          <div key={axis} className="space-y-1.5">
-            <Label>{axis.replace("position", "Pos ")}</Label>
-            <Input name={axis} type="number" step="0.1" defaultValue={d[axis] ?? 0} />
-          </div>
-        ))}
+      <div className="space-y-2">
+        <Label className="text-xs text-white/40 uppercase tracking-widest">Posizione Desktop (X Y Z)</Label>
+        <div className="grid grid-cols-3 gap-4">
+          {(["positionX", "positionY", "positionZ"] as const).map((axis) => (
+            <div key={axis} className="space-y-1.5">
+              <Label>{axis.replace("position", "")}</Label>
+              <Input name={axis} type="number" step="0.1" defaultValue={d[axis] ?? 0} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label className="text-xs text-white/40 uppercase tracking-widest">Posizione Mobile (X Y Z)</Label>
+        <p className="text-xs text-white/25">Rombo consigliato: Top=(0, 1.8), Dx=(1.5, 0), Sx=(-1.5, 0), Bottom=(0, -1.8)</p>
+        <div className="grid grid-cols-3 gap-4">
+          {(["positionMX", "positionMY", "positionMZ"] as const).map((axis) => (
+            <div key={axis} className="space-y-1.5">
+              <Label>{axis.replace("positionM", "")}</Label>
+              <Input name={axis} type="number" step="0.1" defaultValue={d[axis] ?? 0} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-1.5">

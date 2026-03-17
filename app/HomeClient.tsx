@@ -7,6 +7,8 @@ import { ProjectsSidebar } from '@/components/ui/ProjectsSidebar'
 import { AboutSidebar } from '@/components/ui/AboutSidebar'
 import { ProjectDetailSidebar } from '@/components/ui/ProjectDetailSidebar'
 import { Loader } from '@/components/ui/Loader'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import { MobileLayout } from '@/components/mobile/MobileLayout'
 
 const Scene3D = dynamic(
   () => import('@/components/scene/Scene3D').then(m => m.Scene3D),
@@ -23,6 +25,9 @@ export interface PassionData {
   positionX: number
   positionY: number
   positionZ: number
+  positionMX: number
+  positionMY: number
+  positionMZ: number
 }
 
 export interface ProjectData {
@@ -58,7 +63,7 @@ interface HomeClientProps {
   projects: ProjectData[]
 }
 
-export default function HomeClient({ avatarUrl, passions, siteConfig, projects }: HomeClientProps) {
+function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientProps) {
   const [loading, setLoading] = useState(false)
   useEffect(() => setLoading(true), [])
   const [activePassion, setActivePassion] = useState<PassionData | null>(null)
@@ -78,8 +83,6 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
   )
 
   const handleZoomComplete = (passion: PassionData) => setActivePassion(passion)
-
-  // Colore accent che cambia con la passione attiva
   const accentColor = activePassion?.color ?? '#7C5CFC'
 
   return (
@@ -212,16 +215,14 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
         ) : null}
       </AnimatePresence>
 
-      {/* Colonna destra — scena 3D (si allarga quando c'è passione attiva) */}
+      {/* Colonna destra — scena 3D */}
       <div style={{ flex: 1, height: '100%', position: 'relative', overflow: 'hidden' }}>
         {loading && <Loader onComplete={() => setLoading(false)} contained />}
-        {/* Sfondo nebula dinamico */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0,
           background: '#0D0D0D',
           transition: 'all 1.2s cubic-bezier(0.16,1,0.3,1)',
         }}>
-          {/* Blob centrale — cambia con la passione */}
           <div style={{
             position: 'absolute',
             top: '50%', left: '50%',
@@ -231,7 +232,6 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
             background: `radial-gradient(ellipse at center, ${accentColor}3A 0%, transparent 70%)`,
             transition: 'background 1.2s cubic-bezier(0.16,1,0.3,1)',
           }} />
-          {/* Blob viola top-right fisso */}
           <div style={{
             position: 'absolute',
             top: '-10%', right: '-5%',
@@ -239,7 +239,6 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
             borderRadius: '50%',
             background: 'radial-gradient(ellipse at center, #7C5CFC30 0%, transparent 65%)',
           }} />
-          {/* Blob teal bottom-left fisso */}
           <div style={{
             position: 'absolute',
             bottom: '-15%', left: '-10%',
@@ -247,7 +246,6 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
             borderRadius: '50%',
             background: 'radial-gradient(ellipse at center, #1B433230 0%, transparent 65%)',
           }} />
-          {/* Blob ambra top-left fisso */}
           <div style={{
             position: 'absolute',
             top: '10%', left: '-5%',
@@ -274,4 +272,10 @@ export default function HomeClient({ avatarUrl, passions, siteConfig, projects }
       </div>
     </div>
   )
+}
+
+export default function HomeClient(props: HomeClientProps) {
+  const isMobile = useIsMobile()
+  if (isMobile) return <MobileLayout {...props} />
+  return <DesktopHome {...props} />
 }

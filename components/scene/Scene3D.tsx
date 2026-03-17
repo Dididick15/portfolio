@@ -138,9 +138,11 @@ interface Scene3DProps {
   onZoomComplete: (passion: PassionData) => void
   onAvatarClick?: () => void
   resetSignal: number
+  mobilePositions?: [number, number, number][]
+  allowPanY?: boolean
 }
 
-export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal }: Scene3DProps) {
+export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, onAvatarClick, resetSignal, mobilePositions, allowPanY }: Scene3DProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const [avatarSelected, setAvatarSelected] = useState(false)
   const [zooming, setZooming] = useState(false)
@@ -149,6 +151,7 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
   const pendingAvatar = useRef(false)
 
   const positions: [number, number, number][] = passions.map((p, i) => {
+    if (mobilePositions?.[i]) return mobilePositions[i]
     const hasPos = p.positionX !== 0 || p.positionY !== 0 || p.positionZ !== 0
     return hasPos
       ? [p.positionX, p.positionY, p.positionZ]
@@ -195,7 +198,7 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
   return (
     <Canvas
       gl={{ antialias: true, alpha: true }}
-      style={{ background: 'transparent', width: '100%', height: '100%' }}
+      style={{ background: 'transparent', width: '100%', height: '100%', touchAction: allowPanY ? 'pan-y' : 'none' }}
       dpr={[1, 2]}
     >
       <ambientLight intensity={0.7} />
