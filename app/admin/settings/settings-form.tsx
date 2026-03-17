@@ -14,12 +14,14 @@ type Config = {
   location?: string | null; availableForWork?: boolean
   cvUrl?: string | null; githubUrl?: string | null
   linkedinUrl?: string | null; instagramUrl?: string | null
-  emailContact?: string | null
+  emailContact?: string | null; tags?: string[]
 }
 
 export function SettingsForm({ defaultValues: d = {} }: { defaultValues?: Config }) {
   const [state, formAction, pending] = useActionState(updateSettings, null)
   const [avatarUrl, setAvatarUrl] = useState(d.avatarUrl ?? "")
+  const [tags, setTags] = useState<string[]>(d.tags ?? [])
+  const [tagInput, setTagInput] = useState("")
 
   return (
     <form action={formAction} className="space-y-5 max-w-lg">
@@ -73,6 +75,34 @@ export function SettingsForm({ defaultValues: d = {} }: { defaultValues?: Config
             Rimuovi modello
           </button>
         )}
+      </div>
+
+      <div className="space-y-3 pt-2 border-t border-white/10">
+        <p className="text-sm text-white/40">Tag</p>
+        <div className="flex gap-2">
+          <Input
+            value={tagInput}
+            onChange={e => setTagInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === ",") {
+                e.preventDefault()
+                const t = tagInput.trim()
+                if (t && !tags.includes(t)) setTags(prev => [...prev, t])
+                setTagInput("")
+              }
+            }}
+            placeholder="Aggiungi tag e premi Enter"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {tags.map(t => (
+            <span key={t} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 text-sm">
+              {t}
+              <button type="button" onClick={() => setTags(prev => prev.filter(x => x !== t))} className="text-white/40 hover:text-red-400">×</button>
+            </span>
+          ))}
+        </div>
+        <input type="hidden" name="tags" value={tags.join(",")} />
       </div>
 
       <div className="space-y-3 pt-2 border-t border-white/10">

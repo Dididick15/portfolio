@@ -3,11 +3,10 @@
 interface MobileHeroProps {
   ownerName?: string | null
   title?: string | null
+  tags?: string[]
 }
 
-const TAGS = ['React', 'Next.js', 'TypeScript', '3D/R3F']
-
-export function MobileHero({ ownerName, title }: MobileHeroProps) {
+export function MobileHero({ ownerName, title, tags }: MobileHeroProps) {
   return (
     <section style={{
       height: '100dvh',
@@ -56,19 +55,21 @@ export function MobileHero({ ownerName, title }: MobileHeroProps) {
         {title ?? 'Developer'}
       </p>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        {TAGS.map((tag) => (
-          <span key={tag} style={{
-            fontFamily: 'var(--font-space-mono), monospace',
-            fontSize: 10,
-            color: '#888',
-            border: '1px solid #2A2A2A',
-            borderRadius: 4,
-            padding: '4px 10px',
-            letterSpacing: '0.1em',
-          }}>{tag}</span>
-        ))}
-      </div>
+      {(tags?.length ?? 0) > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {tags!.map((tag) => (
+            <span key={tag} style={{
+              fontFamily: 'var(--font-space-mono), monospace',
+              fontSize: 12,
+              color: '#F0EDE8',
+              border: '1px solid rgba(255,255,255,0.35)',
+              borderRadius: 4,
+              padding: '4px 10px',
+              letterSpacing: '0.08em',
+            }}>{tag}</span>
+          ))}
+        </div>
+      )}
 
       {/* Scroll hint */}
       <div style={{

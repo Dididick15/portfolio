@@ -12,6 +12,7 @@ interface SiteConfig {
   linkedinUrl?: string | null
   instagramUrl?: string | null
   emailContact?: string | null
+  tags?: string[]
 }
 
 interface MobileAboutProps {
@@ -135,11 +136,28 @@ export function MobileAbout({ config, onBack }: MobileAboutProps) {
         {config.bioLong && (
           <p style={{
             fontFamily: 'var(--font-outfit), sans-serif',
-            fontSize: 14,
-            color: '#888',
+            fontSize: 17,
+            color: '#F0EDE8',
             margin: 0,
             lineHeight: 1.75,
           }}>{config.bioLong}</p>
+        )}
+
+        {(config.tags?.length ?? 0) > 0 && (
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {config.tags!.map(t => (
+              <span key={t} style={{
+                fontFamily: 'var(--font-space-mono), monospace',
+                fontSize: 12,
+                padding: '4px 10px',
+                borderRadius: 3,
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: '#888',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}>{t}</span>
+            ))}
+          </div>
         )}
 
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingTop: 8, borderTop: '1px solid #1E1E1E' }}>

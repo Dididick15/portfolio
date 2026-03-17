@@ -54,6 +54,7 @@ interface SiteConfig {
   linkedinUrl?: string | null
   instagramUrl?: string | null
   emailContact?: string | null
+  tags?: string[]
 }
 
 interface HomeClientProps {
@@ -142,22 +143,24 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
               Software Developer
             </p>
 
-            <div style={{ marginTop: '40px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {['React', 'Next.js', 'TypeScript', '3D/R3F'].map(tag => (
-                <span key={tag} style={{
-                  fontFamily: 'var(--font-space-mono), monospace',
-                  fontSize: '10px',
-                  padding: '4px 10px',
-                  borderRadius: '3px',
-                  border: '1px solid rgba(255,255,255,0.35)',
-                  background: 'transparent',
-                  color: '#F0EDE8',
-                  letterSpacing: '0.08em',
-                }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {(siteConfig?.tags?.length ?? 0) > 0 && (
+              <div style={{ marginTop: '40px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {siteConfig!.tags!.map(tag => (
+                  <span key={tag} style={{
+                    fontFamily: 'var(--font-space-mono), monospace',
+                    fontSize: '16px',
+                    padding: '4px 10px',
+                    borderRadius: '3px',
+                    border: '1px solid rgba(255,255,255,0.35)',
+                    background: 'transparent',
+                    color: '#F0EDE8',
+                    letterSpacing: '0.08em',
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <div style={{ marginTop: '72px', borderTop: '1px solid #222', paddingTop: '28px' }}>
               <p style={{

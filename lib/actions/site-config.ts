@@ -17,7 +17,7 @@ export async function upsertSiteConfig(data: {
   location?: string | null; availableForWork?: boolean
   cvUrl?: string | null; githubUrl?: string | null
   linkedinUrl?: string | null; instagramUrl?: string | null
-  emailContact?: string | null
+  emailContact?: string | null; tags?: string[]
 }) {
   await prisma.siteConfig.upsert({
     where: { id: "main" },

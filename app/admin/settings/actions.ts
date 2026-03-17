@@ -17,6 +17,7 @@ export async function updateSettings(_: unknown, formData: FormData) {
       linkedinUrl: (formData.get("linkedinUrl") as string) || null,
       instagramUrl: (formData.get("instagramUrl") as string) || null,
       emailContact: (formData.get("emailContact") as string) || null,
+      tags: ((formData.get("tags") as string) || "").split(",").map(t => t.trim()).filter(Boolean),
     })
     return { success: true }
   } catch (e) {

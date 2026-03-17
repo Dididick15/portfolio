@@ -22,6 +22,7 @@ model SiteConfig {
   linkedinUrl  String?
   instagramUrl String?
   emailContact String?
+  tags         String[]
   updatedAt    DateTime @updatedAt
 }
 

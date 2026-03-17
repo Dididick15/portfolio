@@ -20,6 +20,7 @@ interface SiteConfig {
   linkedinUrl?: string | null
   instagramUrl?: string | null
   emailContact?: string | null
+  tags?: string[]
 }
 
 interface MobileLayoutProps {
@@ -62,6 +63,7 @@ export function MobileLayout({ avatarUrl, passions, projects, siteConfig }: Mobi
       <MobileHero
         ownerName={siteConfig?.ownerName}
         title={siteConfig?.title}
+        tags={siteConfig?.tags}
       />
 
       <MobileScene

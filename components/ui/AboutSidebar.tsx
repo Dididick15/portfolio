@@ -15,6 +15,7 @@ interface AboutSidebarProps {
     linkedinUrl?: string | null
     instagramUrl?: string | null
     emailContact?: string | null
+    tags?: string[]
   }
 }
 
@@ -159,13 +160,32 @@ export function AboutSidebar({ onClose, config }: AboutSidebarProps) {
         {config.bioLong && (
           <p style={{
             fontFamily: 'var(--font-outfit), sans-serif',
-            fontSize: '15px',
-            color: '#888',
+            fontSize: '24px',
+            color: '#F0EDE8',
             margin: 0,
             lineHeight: 1.75,
           }}>
             {config.bioLong}
           </p>
+        )}
+
+        {(config.tags?.length ?? 0) > 0 && (
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {config.tags!.map(t => (
+              <span key={t} style={{
+                fontFamily: 'var(--font-space-mono), monospace',
+                fontSize: '16px',
+                padding: '4px 10px',
+                borderRadius: '3px',
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: '#888',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}>
+                {t}
+              </span>
+            ))}
+          </div>
         )}
 
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', paddingTop: '8px', borderTop: '1px solid #1E1E1E' }}>
