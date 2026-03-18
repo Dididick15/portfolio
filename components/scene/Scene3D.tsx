@@ -3,16 +3,16 @@
 import { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { PerspectiveCamera, useProgress } from '@react-three/drei'
-import { Group, Vector3 } from 'three'
+import { Group, Vector3, SpotLight, AmbientLight } from 'three'
 import { AvatarPlaceholder } from './AvatarPlaceholder'
 import { PassionNode } from './PassionNode'
 import type { PassionData } from '@/app/HomeClient'
 
 const DEFAULT_POSITIONS: [number, number, number][] = [
-  [-2.2,  1.5, 0],  // alto sx
-  [ 2.2,  1.5, 0],  // alto dx
-  [-2.2, -1.5, 0],  // basso sx
-  [ 2.2, -1.5, 0],  // basso dx
+  [-1.8,  1.2, 0],  // alto sx
+  [ 1.8,  1.2, 0],  // alto dx
+  [-1.8, -1.2, 0],  // basso sx
+  [ 1.8, -1.2, 0],  // basso dx
 ]
 const DEFAULT_PHASES = [0, 1.5, 3, 4.5]
 
@@ -131,6 +131,46 @@ function SceneContent({ passions, positions, selected, avatarSelected, zooming, 
   )
 }
 
+function FocusLight({ target }: { target: Vector3 | null }) {
+  const spotRef = useRef<SpotLight>(null)
+  const ambientRef = useRef<AmbientLight>(null)
+
+  useFrame(() => {
+    const spot = spotRef.current
+    const amb = ambientRef.current
+    if (!spot || !amb) return
+
+    const wantIntensity = target ? 80 : 0
+    const wantAmbient   = target ? 0.3 : 0.7
+
+    spot.intensity += (wantIntensity - spot.intensity) * 0.06
+    amb.intensity  += (wantAmbient  - amb.intensity)  * 0.06
+
+    if (target) {
+      spot.position.x += (target.x + 1.5 - spot.position.x) * 0.06
+      spot.position.y += (target.y + 2.5 - spot.position.y) * 0.06
+      spot.position.z += (target.z + 3.0 - spot.position.z) * 0.06
+      spot.target.position.set(target.x, target.y, target.z)
+      spot.target.updateMatrixWorld()
+    }
+  })
+
+  return (
+    <>
+      <ambientLight ref={ambientRef} intensity={0.7} />
+      <spotLight
+        ref={spotRef}
+        intensity={0}
+        angle={0.4}
+        penumbra={0.6}
+        color="#ffffff"
+        castShadow={false}
+        position={[0, 2.5, 3]}
+      />
+    </>
+  )
+}
+
 function ProgressBridge({ onProgress }: { onProgress: (p: number) => void }) {
   const { progress } = useProgress()
   useEffect(() => { onProgress(progress) }, [progress, onProgress])
@@ -209,9 +249,9 @@ export function Scene3D({ avatarUrl, passions, onPassionSelect, onZoomComplete, 
       style={{ background: 'transparent', width: '100%', height: '100%', touchAction: allowPanY ? 'pan-y' : 'none' }}
       dpr={[1, 2]}
     >
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[3, 5, 3]} intensity={1.0} color="#ffffff" />
-      <pointLight position={[-3, 2, 2]} intensity={0.4} color="#E8D5B0" />
+      <FocusLight target={zoomTarget} />
+      <directionalLight position={[3, 5, 3]} intensity={0.6} color="#ffffff" />
+      <pointLight position={[-3, 2, 2]} intensity={0.3} color="#E8D5B0" />
       {onProgress && <ProgressBridge onProgress={onProgress} />}
       <PerspectiveCamera makeDefault position={[0, 0, 5.5]} fov={fov} />
       <CinematicCamera

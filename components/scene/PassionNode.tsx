@@ -49,7 +49,7 @@ function PassionGLB({ url, color, useModelColor }: { url: string; color: string;
     })
   }, [scene, color, useModelColor])
 
-  return <primitive object={scene} dispose={null} scale={0.6} />
+  return <primitive object={scene} dispose={null} scale={0.5} />
 }
 
 class GLBErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {

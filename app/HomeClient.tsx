@@ -122,7 +122,7 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
             </p>
             <h1 style={{
               fontFamily: 'var(--font-syne), sans-serif',
-              fontSize: 'clamp(60px, 7vw, 100px)',
+              fontSize: 'clamp(48px, 5.5vw, 80px)',
               fontWeight: 800,
               margin: 0,
               lineHeight: 0.95,
@@ -133,7 +133,7 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
             </h1>
             <p style={{
               fontFamily: 'var(--font-syne), sans-serif',
-              fontSize: 'clamp(16px, 1.8vw, 22px)',
+              fontSize: 'clamp(13px, 1.3vw, 17px)',
               color: '#5A9B7A',
               margin: '20px 0 0',
               fontWeight: 600,
@@ -148,7 +148,7 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
                 {siteConfig!.tags!.map(tag => (
                   <span key={tag} style={{
                     fontFamily: 'var(--font-space-mono), monospace',
-                    fontSize: '16px',
+                    fontSize: '12px',
                     padding: '4px 10px',
                     borderRadius: '3px',
                     border: '1px solid rgba(255,255,255,0.35)',
@@ -163,26 +163,21 @@ function DesktopHome({ avatarUrl, passions, siteConfig, projects }: HomeClientPr
             )}
 
             <div style={{ marginTop: '72px', borderTop: '1px solid #222', paddingTop: '28px' }}>
-              <p style={{
-                fontFamily: 'var(--font-syne), sans-serif',
-                fontSize: 'clamp(15px, 1.5vw, 19px)',
-                color: '#F0EDE8',
-                margin: 0,
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-              }}>
-                Clicca gli oggetti nello spazio
-              </p>
-              <p style={{
-                fontFamily: 'var(--font-space-mono), monospace',
-                fontSize: '10px',
-                color: '#4B7A63',
-                marginTop: '8px',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-              }}>
-                → Esplora le passioni a destra
-              </p>
+              <motion.p
+                animate={{ x: [0, 10, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                  fontFamily: 'var(--font-space-mono), monospace',
+                  fontSize: '13px',
+                  color: '#4B7A63',
+                  margin: 0,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  display: 'inline-block',
+                }}
+              >
+                Clicca su uno degli asset →
+              </motion.p>
             </div>
           </motion.div>
         ) : aboutOpen ? (
