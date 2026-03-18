@@ -20,8 +20,11 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Portfolio personale",
+  title: "Davide Dickmann",
+  description: "Davide Dickmann — Portfolio",
+  icons: {
+    icon: "/images/logo-didi-vett.png",
+  },
 }
 
 export default function RootLayout({
