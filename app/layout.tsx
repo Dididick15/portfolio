@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo-didi-vett.png",
   },
+  openGraph: {
+    title: "Davide Dickmann",
+    description: "Davide Dickmann — Portfolio",
+    images: ["/images/logo-didi-vett.png"],
+  },
 }
 
 export default function RootLayout({
